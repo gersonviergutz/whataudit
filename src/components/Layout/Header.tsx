@@ -29,10 +29,10 @@ export const Header = () => {
         setTitle(t('dashboard.title'));
         break;
       case '/transactions':
-        setTitle(t('nav.transactions'));
+        setTitle(t('transactions.title'));
         break;
       case '/analytics':
-        setTitle(t('nav.analytics'));
+        setTitle(t('analytics.title'));
         break;
       default:
         setTitle(t('app.title'));
