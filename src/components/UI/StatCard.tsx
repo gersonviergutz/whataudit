@@ -1,6 +1,7 @@
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -24,6 +25,8 @@ export const StatCard = ({
   iconClassName = '',
   delay = 0,
 }: StatCardProps) => {
+  const { t } = useLanguage();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -48,7 +51,7 @@ export const StatCard = ({
               >
                 {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
               </span>
-              <span className="text-xs text-muted-foreground ml-1">from last month</span>
+              <span className="text-xs text-muted-foreground ml-1">{t('finance.from_last_month')}</span>
             </div>
           )}
         </div>

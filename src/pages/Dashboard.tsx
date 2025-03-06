@@ -11,10 +11,12 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Dashboard = () => {
   const [summary, setSummary] = useState(calculateFinancialSummary(mockTransactions));
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   useEffect(() => {
     // Recalculate summary when transactions change
@@ -70,7 +72,7 @@ const Dashboard = () => {
           size="lg"
         >
           <PlusIcon className="mr-2 h-4 w-4" />
-          Add Transaction
+          {t('transactions.add')}
         </Button>
       </main>
       

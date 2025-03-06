@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Transaction } from '@/lib/types';
 import { TransactionCard } from '@/components/UI/TransactionCard';
 import { ChevronRightIcon } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -11,6 +12,7 @@ interface RecentTransactionsProps {
 
 export const RecentTransactions = ({ transactions }: RecentTransactionsProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const handleViewAll = () => {
     navigate('/transactions');
@@ -19,7 +21,7 @@ export const RecentTransactions = ({ transactions }: RecentTransactionsProps) =>
   return (
     <div className="glass-card rounded-xl overflow-hidden p-5 shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium">Recent Transactions</h2>
+        <h2 className="text-lg font-medium">{t('transactions.recent')}</h2>
         
         <Button
           variant="ghost"
@@ -27,14 +29,14 @@ export const RecentTransactions = ({ transactions }: RecentTransactionsProps) =>
           className="text-xs gap-1 hover:bg-primary/10 hover:text-primary"
           onClick={handleViewAll}
         >
-          View all
+          {t('transactions.view_all')}
           <ChevronRightIcon className="h-3 w-3" />
         </Button>
       </div>
       
       <div className="space-y-3">
         {transactions.length === 0 ? (
-          <p className="text-center py-6 text-muted-foreground">No transactions yet</p>
+          <p className="text-center py-6 text-muted-foreground">{t('transactions.no_transactions')}</p>
         ) : (
           transactions.map((transaction, index) => (
             <TransactionCard 

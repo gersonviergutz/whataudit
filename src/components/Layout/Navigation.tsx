@@ -4,13 +4,13 @@ import {
   HomeIcon, 
   BarChart4Icon, 
   ListIcon, 
-  MessageSquareIcon,
-  HelpCircleIcon,
-  SettingsIcon
+  MessageSquareIcon
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const Navigation = () => {
   const location = useLocation();
+  const { t } = useLanguage();
   
   const isActive = (path: string) => {
     return location.pathname === path || 
@@ -18,9 +18,9 @@ export const Navigation = () => {
   };
   
   const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: HomeIcon },
-    { path: '/transactions', label: 'Transactions', icon: ListIcon },
-    { path: '/analytics', label: 'Analytics', icon: BarChart4Icon },
+    { path: '/dashboard', label: t('nav.dashboard'), icon: HomeIcon },
+    { path: '/transactions', label: t('nav.transactions'), icon: ListIcon },
+    { path: '/analytics', label: t('nav.analytics'), icon: BarChart4Icon },
   ];
   
   return (
@@ -53,7 +53,7 @@ export const Navigation = () => {
           className="relative flex flex-col items-center justify-center p-2 sm:p-3 rounded-full sm:rounded-xl transition-all duration-300 text-muted-foreground hover:text-foreground hover:bg-secondary"
         >
           <MessageSquareIcon className="h-5 w-5 sm:h-6 sm:w-6" />
-          <span className="text-xs mt-1 sm:sr-only">WhatsApp</span>
+          <span className="text-xs mt-1 sm:sr-only">{t('nav.whatsapp')}</span>
         </Link>
       </div>
     </nav>

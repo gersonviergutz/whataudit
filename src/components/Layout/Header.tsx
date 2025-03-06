@@ -4,11 +4,14 @@ import { useLocation } from 'react-router-dom';
 import { SearchIcon, BellIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { LanguageSwitcher } from '@/components/UI/LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const Header = () => {
   const location = useLocation();
   const [title, setTitle] = useState('Dashboard');
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useLanguage();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -23,18 +26,18 @@ export const Header = () => {
     switch (location.pathname) {
       case '/':
       case '/dashboard':
-        setTitle('Dashboard');
+        setTitle(t('dashboard.title'));
         break;
       case '/transactions':
-        setTitle('Transactions');
+        setTitle(t('nav.transactions'));
         break;
       case '/analytics':
-        setTitle('Analytics');
+        setTitle(t('nav.analytics'));
         break;
       default:
-        setTitle('WhatsApp Finance');
+        setTitle(t('app.title'));
     }
-  }, [location.pathname]);
+  }, [location.pathname, t]);
   
   return (
     <header 
@@ -54,10 +57,12 @@ export const Header = () => {
             <SearchIcon className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search..."
+              placeholder={t('header.search')}
               className="w-64 pl-8 rounded-full bg-background"
             />
           </div>
+          
+          <LanguageSwitcher />
           
           <Button variant="ghost" size="icon" className="relative">
             <BellIcon className="h-5 w-5" />
@@ -69,7 +74,7 @@ export const Header = () => {
             size="sm"
             className="rounded-full px-4"
           >
-            Connect WhatsApp
+            {t('header.connect')}
           </Button>
         </div>
       </div>
