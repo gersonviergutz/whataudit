@@ -1,11 +1,5 @@
 
 import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
 import { GlobeIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -25,29 +19,26 @@ export const LanguageSwitcher = () => {
   };
   
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <GlobeIcon className="h-5 w-5" />
-          {language === 'pt-BR' && (
-            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-primary" />
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem 
-          onClick={() => handleLanguageChange('en')}
-          className={language === 'en' ? 'bg-secondary' : ''}
-        >
-          🇺🇸 English
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => handleLanguageChange('pt-BR')}
-          className={language === 'pt-BR' ? 'bg-secondary' : ''}
-        >
-          🇧🇷 Português
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center space-x-1">
+      <Button 
+        variant={language === 'en' ? 'secondary' : 'ghost'} 
+        size="icon" 
+        onClick={() => handleLanguageChange('en')}
+        className="relative"
+        aria-label="Switch to English"
+      >
+        <span className="text-lg">🇺🇸</span>
+      </Button>
+      
+      <Button 
+        variant={language === 'pt-BR' ? 'secondary' : 'ghost'} 
+        size="icon" 
+        onClick={() => handleLanguageChange('pt-BR')}
+        className="relative"
+        aria-label="Switch to Portuguese"
+      >
+        <span className="text-lg">🇧🇷</span>
+      </Button>
+    </div>
   );
 };
