@@ -126,15 +126,23 @@ export const translations = {
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    // Try to get the language from localStorage, default to 'en'
-    const savedLanguage = localStorage.getItem('language') as Language;
-    return savedLanguage === 'pt-BR' ? 'pt-BR' : 'en';
+    try {
+      const savedLanguage = localStorage.getItem('language');
+      return (savedLanguage === 'pt-BR' || savedLanguage === 'en') ? savedLanguage as Language : 'en';
+    } catch (error) {
+      console.error("Error accessing localStorage:", error);
+      return 'en';
+    }
   });
 
   const setLanguage = (lang: Language) => {
     console.log("Changing language to:", lang);
     setLanguageState(lang);
-    localStorage.setItem('language', lang);
+    try {
+      localStorage.setItem('language', lang);
+    } catch (error) {
+      console.error("Error saving language to localStorage:", error);
+    }
   };
 
   const t = (key: string): string => {
@@ -150,14 +158,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     console.log("Language set to:", language);
   }, [language]);
 
-  const contextValue = {
-    language,
-    setLanguage,
-    t
-  };
-
   return (
-    <LanguageContext.Provider value={contextValue}>
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
