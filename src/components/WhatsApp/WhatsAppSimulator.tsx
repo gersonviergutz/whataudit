@@ -13,7 +13,9 @@ interface WhatsAppMessage {
 }
 
 export const WhatsAppSimulator = () => {
-  const [messages, setMessages] = useState<WhatsAppMessage[]>(whatsappMessages);
+  const [messages, setMessages] = useState<WhatsAppMessage[]>(
+    whatsappMessages as WhatsAppMessage[]
+  );
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
