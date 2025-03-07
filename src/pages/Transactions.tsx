@@ -10,12 +10,16 @@ import { Transaction, TransactionType, TransactionCategory } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, SearchIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isAddingTransaction, setIsAddingTransaction] = useState(searchParams.get('add') === 'true');
+  const [searchTerm, setSearchTerm] = useState('');
+  const { t } = useLanguage();
   
   useEffect(() => {
     // Update dialog state from URL
@@ -59,15 +63,28 @@ const Transactions = () => {
           className="glass-card rounded-xl overflow-hidden p-5 shadow-sm"
         >
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-xl font-semibold">All Transactions</h1>
+            <h1 className="text-xl font-semibold">{t('transactions.title')}</h1>
             
             <Button onClick={handleOpenAddDialog} className="rounded-full">
               <PlusIcon className="mr-2 h-4 w-4" />
-              Add Transaction
+              {t('transactions.add')}
             </Button>
           </div>
           
-          <TransactionList transactions={transactions} />
+          <div className="mb-4 relative">
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={t('transactions.search')}
+              className="pl-10 w-full"
+            />
+          </div>
+          
+          <TransactionList 
+            transactions={transactions} 
+            searchTerm={searchTerm}
+          />
         </motion.div>
       </main>
       
@@ -76,7 +93,7 @@ const Transactions = () => {
       }}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add Transaction</DialogTitle>
+            <DialogTitle>{t('transaction.form.title')}</DialogTitle>
           </DialogHeader>
           
           <TransactionForm

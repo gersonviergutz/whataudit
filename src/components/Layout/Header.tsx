@@ -1,17 +1,21 @@
 
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { SearchIcon, BellIcon } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { SearchIcon, BellIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LanguageSwitcher } from '@/components/UI/LanguageSwitcher';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 
 export const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [title, setTitle] = useState('Dashboard');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { t } = useLanguage();
+  const { toast } = useToast();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +43,19 @@ export const Header = () => {
     }
   }, [location.pathname, t]);
   
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (searchQuery.trim()) {
+      navigate(`/transactions?search=${encodeURIComponent(searchQuery)}`);
+      toast({
+        title: t('Searching'),
+        description: `"${searchQuery}"`,
+        duration: 2000,
+      });
+    }
+  };
+  
   return (
     <header 
       className={`sticky top-0 z-30 w-full transition-all duration-300 backdrop-blur-sm ${
@@ -53,14 +70,25 @@ export const Header = () => {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="relative hidden md:flex items-center">
+          <form onSubmit={handleSearch} className="relative hidden md:flex items-center">
             <SearchIcon className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('header.search')}
               className="w-64 pl-8 rounded-full bg-background"
             />
-          </div>
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 text-muted-foreground hover:text-foreground"
+              >
+                <XIcon className="h-4 w-4" />
+              </button>
+            )}
+          </form>
           
           <LanguageSwitcher />
           
