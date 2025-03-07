@@ -10,7 +10,7 @@ import { Transaction, TransactionType, TransactionCategory } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, SearchIcon } from 'lucide-react';
+import { PlusIcon, SearchIcon, XIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -18,20 +18,42 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isAddingTransaction, setIsAddingTransaction] = useState(searchParams.get('add') === 'true');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const { t } = useLanguage();
   
   useEffect(() => {
     // Update dialog state from URL
     setIsAddingTransaction(searchParams.get('add') === 'true');
+    // Update search term from URL
+    setSearchTerm(searchParams.get('search') || '');
   }, [searchParams]);
   
   const handleOpenAddDialog = () => {
-    setSearchParams({ add: 'true' });
+    // Preserve search parameter if it exists
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('add', 'true');
+    setSearchParams(newParams);
   };
   
   const handleCloseAddDialog = () => {
-    setSearchParams({});
+    // Preserve search parameter if it exists
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('add');
+    setSearchParams(newParams);
+  };
+  
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // Update URL with search parameter
+    const newParams = new URLSearchParams(searchParams);
+    if (value) {
+      newParams.set('search', value);
+    } else {
+      newParams.delete('search');
+    }
+    setSearchParams(newParams);
   };
   
   const handleAddTransaction = (transactionData: {
@@ -75,10 +97,19 @@ const Transactions = () => {
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               placeholder={t('transactions.search')}
               className="pl-10 w-full"
             />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => handleSearchChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <XIcon className="h-4 w-4" />
+              </button>
+            )}
           </div>
           
           <TransactionList 

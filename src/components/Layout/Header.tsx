@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { SearchIcon, BellIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [title, setTitle] = useState('Dashboard');
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,6 +26,19 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  useEffect(() => {
+    // Update search query from URL when on transactions page
+    if (location.pathname === '/transactions') {
+      const searchParam = searchParams.get('search');
+      if (searchParam) {
+        setSearchQuery(searchParam);
+      }
+    } else {
+      // Reset search query when not on transactions page
+      setSearchQuery('');
+    }
+  }, [location.pathname, searchParams]);
   
   useEffect(() => {
     switch (location.pathname) {
